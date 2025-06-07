@@ -4,11 +4,27 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="1dp"
+    android:background="@color/teal_700">
+
+    <TextView
+        android:id="@+id/app_heading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/app_heading"
+        android:textColor="@color/black"
+        android:textSize="@dimen/app_heading_text_size"
+        android:fontFamily="sans-serif-condensed-medium"
+        android:textFontWeight="700"
+        android:paddingTop="@dimen/app_heading_padding_top"
+        android:layout_gravity="center" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/appRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:paddingTop="16dp"/>
+        android:paddingTop="16dp"
+        android:layout_marginBottom="5dp"/>
 </LinearLayout>
+

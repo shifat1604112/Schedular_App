@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Scheduler</string>
+    <string name="app_heading">Set Schedule</string>
+    <string name="pick_time_button">Pick Time</string>
+    <string name="save_schedule_button">Save Schedule</string>
+    <string name="choose_days">Choose Days:</string>
 </resources>

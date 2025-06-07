@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="app_heading_padding_top">28dp</dimen>
+    <dimen name="app_heading_text_size">28sp</dimen>
+</resources>
