@@ -1,0 +1,14 @@
+package com.example.scheduler.data.local
+
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "schedules")
+data class ScheduleEntity(
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    val packageName: String,
+    val appLabel: String,
+    val time: String,
+    val recurrence: String,
+    val days: String
+)

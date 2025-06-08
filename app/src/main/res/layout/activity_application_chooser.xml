@@ -19,8 +19,14 @@
         android:paddingTop="@dimen/app_heading_padding_top"
         android:layout_gravity="center" />
 
+    <Button
+        android:id="@+id/viewSchedulesButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/view_scheduled_apps" />
+
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/appRecyclerView"
+        android:id="@+id/appListRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"

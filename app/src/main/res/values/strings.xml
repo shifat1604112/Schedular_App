@@ -4,4 +4,5 @@
     <string name="pick_time_button">Pick Time</string>
     <string name="save_schedule_button">Save Schedule</string>
     <string name="choose_days">Choose Days:</string>
+    <string name="view_scheduled_apps">View Scheduled Apps</string>
 </resources>

@@ -1,4 +1,4 @@
-package com.example.scheduler.data
+package com.example.scheduler.data.model
 
 import android.graphics.drawable.Drawable
 

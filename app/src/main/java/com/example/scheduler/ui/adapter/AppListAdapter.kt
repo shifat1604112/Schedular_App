@@ -1,11 +1,9 @@
-package com.example.scheduler
+package com.example.scheduler.ui.adapter
 
-import android.content.pm.ApplicationInfo
-import android.content.pm.PackageManager
 import android.view.ViewGroup
 import android.view.LayoutInflater
 import androidx.recyclerview.widget.RecyclerView
-import com.example.scheduler.data.AppInfo
+import com.example.scheduler.data.model.AppInfo
 import com.example.scheduler.databinding.AppItemBinding
 
 class AppListAdapter(
@@ -20,7 +18,6 @@ class AppListAdapter(
 
     override fun onBindViewHolder(holder: AppViewHolder, position: Int) {
         val app = apps[position]
-        //val pm: PackageManager = holder.binding.root.context.packageManager
 
         holder.binding.appName.text = app.name
         holder.binding.appIcon.setImageDrawable(app.icon)

@@ -106,7 +106,7 @@
                 android:id="@+id/sunCheck"
                 android:text="Sunday"/>
         </LinearLayout>
-        
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <Button
