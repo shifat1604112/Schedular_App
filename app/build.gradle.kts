@@ -54,7 +54,12 @@ dependencies {
     implementation(libs.androidx.recyclerview)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.room.ktx)
+    // ViewPager2
+    implementation(libs.androidx.viewpager2)
+    // Material Design (for TabLayout)
+    implementation(libs.material)
     kapt(libs.androidx.room.compiler)
+    implementation(libs.androidx.cardview)
     implementation(libs.androidx.constraintlayout)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

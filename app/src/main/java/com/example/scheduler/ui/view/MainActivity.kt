@@ -1,51 +1,29 @@
 package com.example.scheduler.ui.view
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.example.scheduler.databinding.ActivityApplicationChooserBinding
-import android.content.pm.PackageManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.scheduler.ui.adapter.AppListAdapter
-import com.example.scheduler.data.model.AppInfo
-
+import com.example.scheduler.databinding.ActivityMainBinding
+import com.example.scheduler.ui.adapter.ViewPagerAdapter
+import com.google.android.material.tabs.TabLayoutMediator
 
 class MainActivity : AppCompatActivity() {
-
-    private lateinit var binding: ActivityApplicationChooserBinding
-    private lateinit var appAdapter: AppListAdapter
+    private lateinit var binding: ActivityMainBinding
+    private lateinit var _adapter: ViewPagerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityApplicationChooserBinding.inflate(layoutInflater)
+        binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val packageManager = packageManager
-        val intent = Intent(Intent.ACTION_MAIN, null).apply {
-            addCategory(Intent.CATEGORY_LAUNCHER)
-        }
-        val installedApps = packageManager.queryIntentActivities(intent, PackageManager.MATCH_ALL)
-            .map {
-                AppInfo(
-                    name = it.loadLabel(packageManager).toString(),
-                    packageName = it.activityInfo.packageName,
-                    icon = it.loadIcon(packageManager)
-                )
-            }.sortedBy { it.name.lowercase() }
-
-        appAdapter = AppListAdapter(installedApps) { selectedApp ->
-            val intent = Intent(this, ScheduleActivity::class.java)
-            intent.putExtra("packageName", selectedApp.packageName)
-            intent.putExtra("appLabel", selectedApp.name)
-            startActivity(intent)
+        _adapter = ViewPagerAdapter(this).apply {
+            addFragment(AppListViewFragment(), "AppListView")
+            addFragment(ScheduleListFragment(), "ScheduleList")
         }
 
-        binding.appListRecyclerView.layoutManager = LinearLayoutManager(this)
-        binding.appListRecyclerView.adapter = appAdapter
+        binding.viewPager.adapter = _adapter
 
-
-        binding.viewSchedulesButton.setOnClickListener {
-            startActivity(Intent(this, ScheduleListActivity::class.java))
-        }
+        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
+            tab.text = _adapter.getTitle(position)
+        }.attach()
     }
 }

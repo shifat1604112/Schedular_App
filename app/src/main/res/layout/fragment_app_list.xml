@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="1dp"
-    android:background="@color/teal_700">
+    android:background="#faf6e9">
 
     <TextView
         android:id="@+id/app_heading"
@@ -18,12 +18,6 @@
         android:textFontWeight="700"
         android:paddingTop="@dimen/app_heading_padding_top"
         android:layout_gravity="center" />
-
-    <Button
-        android:id="@+id/viewSchedulesButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/view_scheduled_apps" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/appListRecyclerView"

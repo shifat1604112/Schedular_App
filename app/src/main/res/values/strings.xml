@@ -5,4 +5,8 @@
     <string name="save_schedule_button">Save Schedule</string>
     <string name="choose_days">Choose Days:</string>
     <string name="view_scheduled_apps">View Scheduled Apps</string>
+    <string name="scheduled_app_name">App Name</string>
+    <string name="schedule_information">Schedule information</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
 </resources>

@@ -12,3 +12,9 @@ data class ScheduleEntity(
     val recurrence: String,
     val days: String
 )
+
+@Entity(tableName = "package_colors")
+data class PackageColor(
+    @PrimaryKey val packageName: String,
+    val colorHex: String // store color as hex string e.g. "#FF0000"
+)
