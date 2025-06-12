@@ -2,4 +2,16 @@
 <resources>
     <dimen name="app_heading_padding_top">32dp</dimen>
     <dimen name="app_heading_text_size">28sp</dimen>
+    <dimen name="item_schedule_card_corner_radius">8dp</dimen>
+    <dimen name="item_schedule_card_layout_margin">8dp</dimen>
+    <dimen name="item_schedule_card_elavation">4dp</dimen>
+    <dimen name="item_schedule_app_name_text_size">15sp</dimen>
+    <dimen name="item_schedule_schedule_info_text_size">18sp</dimen>
+    <dimen name="item_schedule_edit_button_margin_end">10dp</dimen>
+    <dimen name="activity_schedule_linear_layout_padding_bottom">32dp</dimen>
+    <dimen name="activity_schedule_app_name_text_size">20sp</dimen>
+    <dimen name="activity_schedule_app_name_margin_bottom">24dp</dimen>
+    <dimen name="activity_schedule_pick_time_btn_margin_bottom">8dp</dimen>
+    <dimen name="activity_schedule_selected_time_margin_bottom">24dp</dimen>
+    <dimen name="activity_schedule_day_text_size">16sp</dimen>
 </resources>

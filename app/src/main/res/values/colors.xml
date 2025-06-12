@@ -7,4 +7,8 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="activity_schedule_app_name_color">#212121</color>
+    <color name="activity_schedule_pick_time_btn_bg_tint">#3F51B5</color>
+    <color name="activity_schedule_pick_time_btn_text_color">#FFFFFF</color>
+    <color name="activity_schedule_day_text_color">#212121</color>
 </resources>

@@ -18,7 +18,6 @@
         android:theme="@style/Theme.Scheduler"
         tools:targetApi="31">
         <activity android:name=".ui.view.ScheduleActivity" />
-        <activity android:name=".ui.view.ScheduleListActivity" />
         <activity
             android:name=".ui.view.MainActivity"
             android:exported="true"
@@ -33,7 +32,5 @@
 
         <receiver android:name=".receiver.AlarmReceiver"
             android:exported="true" />
-
     </application>
-
 </manifest>

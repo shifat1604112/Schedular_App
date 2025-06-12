@@ -11,32 +11,32 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:paddingBottom="32dp">
+        android:paddingBottom="@dimen/activity_schedule_linear_layout_padding_bottom">
 
         <TextView
             android:id="@+id/appName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
+            android:layout_marginBottom="@dimen/activity_schedule_app_name_margin_bottom"
             android:text="@string/app_name"
-            android:textColor="#212121"
-            android:textSize="20sp"
+            android:textColor="@color/activity_schedule_app_name_color"
+            android:textSize="@dimen/activity_schedule_app_name_text_size"
             android:textStyle="bold" />
 
         <Button
             android:id="@+id/pickTimeButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:backgroundTint="#3F51B5"
+            android:layout_marginBottom="@dimen/activity_schedule_pick_time_btn_margin_bottom"
+            android:backgroundTint="@color/activity_schedule_pick_time_btn_bg_tint"
             android:text="@string/pick_time_button"
-            android:textColor="#FFFFFF" />
+            android:textColor="@color/activity_schedule_pick_time_btn_text_color" />
 
         <TextView
             android:id="@+id/timeSelected"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
+            android:layout_marginBottom="@dimen/activity_schedule_selected_time_margin_bottom"
             android:text="@string/no_time_selected"
             android:textColor="#757575" />
 
@@ -45,7 +45,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
-            android:background="#F5F5F5"
             android:elevation="2dp"
             android:padding="8dp">
 
@@ -54,8 +53,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/choose_days"
-                android:textColor="#212121"
-                android:textSize="16sp"
+                android:gravity="center"
+                android:textColor="@color/activity_schedule_day_text_color"
+                android:textSize="@dimen/activity_schedule_day_text_size"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
