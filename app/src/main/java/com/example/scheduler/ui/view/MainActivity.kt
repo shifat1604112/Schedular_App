@@ -1,6 +1,7 @@
 package com.example.scheduler.ui.view
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.example.scheduler.databinding.ActivityMainBinding
 import com.example.scheduler.ui.adapter.ViewPagerAdapter
@@ -12,6 +13,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        Log.d("Schedule App","mainActivity- > onCreate")
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 

@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -38,6 +39,9 @@ class ScheduleActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        Log.d("Schedule App","ScheduleActivity - > onCreate")
+
         binding = ActivityScheduleBinding.inflate(layoutInflater)
         setContentView(binding.root)
 

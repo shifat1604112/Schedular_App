@@ -2,6 +2,7 @@ package com.example.scheduler.ui.view
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,12 +31,16 @@ class ScheduleListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        Log.d("Schedule App","ScheduleListFragment - > onCreateView")
+
         _binding = FragmentScheduleListBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Log.d("Schedule App","ScheduleListFragment - > onViewCreated")
+
         binding.scheduleRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         loadSchedulesWithColors()
     }
@@ -106,10 +111,13 @@ class ScheduleListFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        Log.d("Schedule App","ScheduleListFragment - > onResume")
+
         loadSchedulesWithColors() // refresh every time user returns to this screen
     }
 
     override fun onDestroyView() {
+        Log.d("Schedule App","ScheduleListFragment - > onDestroy")
         super.onDestroyView()
         _binding = null
     }

@@ -33,10 +33,4 @@ class PackageScheduleListAdapter(
 
     inner class PackageScheduleViewHolder(val binding: ItemScheduleBinding) :
         RecyclerView.ViewHolder(binding.root)
-
-    fun updateList(newList: List<ScheduleEntity>) {
-        schedules.clear()
-        schedules.addAll(newList)
-        notifyDataSetChanged()
-    }
 }

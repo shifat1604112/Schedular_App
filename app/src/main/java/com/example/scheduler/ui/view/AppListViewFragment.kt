@@ -23,7 +23,7 @@ class AppListViewFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        Log.d("GG","AppListViewFragment - > onCreateView")
+        Log.d("Schedule App","AppListViewFragment - > onCreateView")
         _binding = FragmentAppListBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -31,9 +31,8 @@ class AppListViewFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        Log.d("GG","AppListViewFragment - > onViewCreated")
+        Log.d("Schedule App","AppListViewFragment - > onViewCreated")
 
-        // Use requireContext() for context-dependent operations
         val packageManager = requireContext().packageManager
         val intent = Intent(Intent.ACTION_MAIN, null).apply {
             addCategory(Intent.CATEGORY_LAUNCHER)
@@ -62,7 +61,7 @@ class AppListViewFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        Log.d("GG","AppListViewFragment - > onDestroyView")
+        Log.d("Schedule App","AppListViewFragment - > onDestroyView")
         _binding = null
     }
 }

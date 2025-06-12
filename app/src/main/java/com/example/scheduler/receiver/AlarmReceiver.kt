@@ -39,7 +39,6 @@ class AlarmReceiver : BroadcastReceiver() {
         val notificationManager =
             context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        // Create notification channel (for Android O+)
         val channel = NotificationChannel(
             channelId, "Scheduled App Launches", NotificationManager.IMPORTANCE_HIGH
         ).apply {
