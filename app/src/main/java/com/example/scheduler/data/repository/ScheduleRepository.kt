@@ -7,7 +7,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class ScheduleRepository(private val db: AppDatabase) {
-
     private val scheduleDao = db.scheduleDao()
     private val colorDao = db.packageColorDao()
 

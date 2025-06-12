@@ -13,7 +13,6 @@ import com.example.scheduler.ui.adapter.AppListAdapter
 import com.example.scheduler.data.model.AppInfo
 import com.example.scheduler.databinding.FragmentAppListBinding
 
-
 class AppListViewFragment : Fragment() {
 
     private var _binding: FragmentAppListBinding? = null

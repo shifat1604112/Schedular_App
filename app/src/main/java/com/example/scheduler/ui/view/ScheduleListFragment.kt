@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.scheduler.data.local.AppDatabase
-import com.example.scheduler.data.local.ScheduleDao
 import com.example.scheduler.databinding.FragmentScheduleListBinding
 import com.example.scheduler.ui.adapter.ScheduleListAdapter
 import kotlinx.coroutines.launch
@@ -23,7 +22,6 @@ class ScheduleListFragment : Fragment() {
 
     private var _binding: FragmentScheduleListBinding? = null
     private val binding get() = _binding!!
-    private lateinit var dao: ScheduleDao
     private lateinit var scheduleListAdapter: ScheduleListAdapter
     private val scheduleList = mutableListOf<ScheduleEntity>()
 
@@ -53,7 +51,8 @@ class ScheduleListFragment : Fragment() {
 
             for (schedule in schedules) {
                 val existingColor = colorDao.getColorForPackage(schedule.packageName)
-                val colorHex = existingColor?.colorHex ?: generateAndStoreColor(schedule.packageName, colorDao)
+                val colorHex =
+                    existingColor?.colorHex ?: generateAndStoreColor(schedule.packageName, colorDao)
                 colorMap[schedule.packageName] = colorHex.toColorInt()
             }
 
@@ -63,7 +62,8 @@ class ScheduleListFragment : Fragment() {
                 onDelete = { schedule ->
                     viewLifecycleOwner.lifecycleScope.launch {
                         scheduleDao.delete(schedule)
-                        Toast.makeText(requireContext(), "Schedule deleted", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), "Schedule deleted", Toast.LENGTH_SHORT)
+                            .show()
                         loadSchedulesWithColors()
                     }
                 },
@@ -88,7 +88,10 @@ class ScheduleListFragment : Fragment() {
         }
     }
 
-    private suspend fun generateAndStoreColor(packageName: String, dao: com.example.scheduler.data.local.PackageColorDao): String {
+    private suspend fun generateAndStoreColor(
+        packageName: String,
+        dao: com.example.scheduler.data.local.PackageColorDao
+    ): String {
         val color = generateColorHex()
         dao.insertColor(PackageColor(packageName = packageName, colorHex = color))
         return color
@@ -105,7 +108,6 @@ class ScheduleListFragment : Fragment() {
         super.onResume()
         loadSchedulesWithColors() // refresh every time user returns to this screen
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()
