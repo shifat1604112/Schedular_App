@@ -18,3 +18,10 @@ data class PackageColor(
     @PrimaryKey val packageName: String,
     val colorHex: String
 )
+
+@Entity(tableName = "app_launch")
+data class AppLaunchEntity(
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    val packageName: String,
+    val timestamp: Long
+)

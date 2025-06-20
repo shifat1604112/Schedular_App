@@ -1,5 +1,6 @@
 package com.example.scheduler.receiver
 
+import android.R.attr.targetPackage
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -9,11 +10,18 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
+import android.os.Build
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
-import com.example.scheduler.R
 import androidx.core.graphics.createBitmap
+import com.example.scheduler.R
+import com.example.scheduler.data.local.AppDatabase
+import com.example.scheduler.data.local.AppLaunchEntity
+import com.example.scheduler.ui.view.HiddenLauncherActivity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+
 
 class AlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
@@ -24,16 +32,39 @@ class AlarmReceiver : BroadcastReceiver() {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
 
-        if (launchIntent != null) {
-            // Send a notification instead of launching app directly
-            showLaunchNotification(context, packageName, launchIntent)
-        } else {
+        if (launchIntent == null) {
             Toast.makeText(context, "App not found: $packageName", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        launchScheduledApplication(context, packageName, launchIntent)
+    }
+
+    private fun launchScheduledApplication(
+        context: Context,
+        packageName: String,
+        launchIntent: Intent
+    ) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            context.startActivity(launchIntent)
+
+            // Direct launch for lower Android versions
+            CoroutineScope(Dispatchers.IO).launch {
+                AppDatabase.getInstance(context).appLaunchDao().insert(
+                    AppLaunchEntity(
+                        packageName = packageName,
+                        timestamp = System.currentTimeMillis()
+                    )
+                )
+            }
+        } else {
+            // Show notification for Android 10+
+            showLaunchNotification(context, packageName)
         }
     }
 
     private fun showLaunchNotification(
-        context: Context, packageName: String, launchIntent: Intent
+        context: Context, packageName: String
     ) {
         val channelId = "scheduled_app_launch"
         val notificationManager =
@@ -48,16 +79,15 @@ class AlarmReceiver : BroadcastReceiver() {
 
         val packageManager = context.packageManager
 
-        var appName: String
-        var appIcon: Drawable?
-        try {
-            val appInfo = packageManager.getApplicationInfo(packageName, 0)
-            appName = packageManager.getApplicationLabel(appInfo).toString()
-            appIcon = packageManager.getApplicationIcon(appInfo)
+        val appInfo = try {
+            packageManager.getApplicationInfo(packageName, 0)
         } catch (e: PackageManager.NameNotFoundException) {
-            appName = packageName
-            appIcon = null
+            null
         }
+
+        val appName =
+            appInfo?.let { packageManager.getApplicationLabel(it).toString() } ?: packageName
+        val appIcon = appInfo?.let { packageManager.getApplicationIcon(it) }
 
         val largeIconBitmap = appIcon?.let { drawable ->
             if (drawable is BitmapDrawable) {
@@ -72,18 +102,28 @@ class AlarmReceiver : BroadcastReceiver() {
             }
         }
 
+        val bridgeIntent = Intent(context, HiddenLauncherActivity::class.java
+        )
+        bridgeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        bridgeIntent.putExtra("targetApp", packageName)
+
+
+
+
         val pendingIntent = PendingIntent.getActivity(
             context,
             System.currentTimeMillis().toInt(),
-            launchIntent,
+            bridgeIntent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
         val notification = NotificationCompat.Builder(context, channelId)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setLargeIcon(largeIconBitmap)
-            .setContentTitle("$appName Launch").setContentText("Tap to open $appName")
-            .setContentIntent(pendingIntent).setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setContentTitle("$appName Launch")
+            .setContentText("Tap to open $appName")
+            .setContentIntent(pendingIntent)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setAutoCancel(true).build()
 
         notificationManager.notify(System.currentTimeMillis().toInt(), notification)

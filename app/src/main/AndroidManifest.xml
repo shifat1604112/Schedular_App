@@ -30,7 +30,12 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".ui.view.HiddenLauncherActivity"
+            android:excludeFromRecents="true"
+            android:noHistory="true" />
+
         <receiver android:name=".receiver.AlarmReceiver"
-            android:exported="true" />
+            android:exported="false" />
     </application>
 </manifest>

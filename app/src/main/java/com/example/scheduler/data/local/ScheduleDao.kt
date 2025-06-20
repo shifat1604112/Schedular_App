@@ -35,3 +35,12 @@ interface PackageColorDao {
     @Query("SELECT * FROM package_colors WHERE packageName = :packageName LIMIT 1")
     suspend fun getColorForPackage(packageName: String): PackageColor?
 }
+
+@Dao
+interface AppLaunchDao {
+    @Insert
+    suspend fun insert(launch: AppLaunchEntity)
+
+    @Query("SELECT * FROM app_launch ORDER BY timestamp DESC")
+    suspend fun getAll(): List<AppLaunchEntity>
+}
