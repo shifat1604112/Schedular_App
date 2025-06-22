@@ -11,4 +11,5 @@
     <color name="activity_schedule_pick_time_btn_bg_tint">#3F51B5</color>
     <color name="activity_schedule_pick_time_btn_text_color">#FFFFFF</color>
     <color name="activity_schedule_day_text_color">#212121</color>
+    <color name="schedule_activity_card_view_bg_color">#F9F9F9</color>
 </resources>

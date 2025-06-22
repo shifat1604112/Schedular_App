@@ -52,8 +52,8 @@
                 android:id="@+id/dayText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/choose_days"
                 android:gravity="center"
+                android:text="@string/choose_days"
                 android:textColor="@color/activity_schedule_day_text_color"
                 android:textSize="@dimen/activity_schedule_day_text_size"
                 android:textStyle="bold"
@@ -141,23 +141,31 @@
             android:text="@string/save_schedule_button"
             android:textColor="#FFFFFF" />
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/schedulesCardView"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="24dp"
-            android:elevation="4dp"
-            android:visibility="gone"
-            app:cardBackgroundColor="#FFFFFF"
-            app:cardCornerRadius="12dp">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/schedulesRecyclerView"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/schedulesCardView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="16dp"
-                android:scrollbars="vertical" />
-        </androidx.cardview.widget.CardView>
+                android:layout_marginHorizontal="12dp"
+                android:layout_marginVertical="16dp"
+                android:visibility="gone"
+                android:background="@color/schedule_activity_card_view_bg_color"
+                android:elevation="4dp"
+                android:foreground="?android:attr/selectableItemBackground"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/schedulesRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clipToPadding="false"
+                    android:scrollbars="vertical" />
+            </androidx.cardview.widget.CardView>
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>
