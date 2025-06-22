@@ -3,20 +3,18 @@ package com.example.scheduler.ui.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.cardview.widget.CardView
-import androidx.core.graphics.drawable.toDrawable
 import androidx.recyclerview.widget.RecyclerView
 import com.example.scheduler.data.local.ScheduleEntity
-import com.example.scheduler.databinding.ItemScheduleBinding
+import com.example.scheduler.databinding.ItemPackageScheduleBinding
 
 class PackageScheduleListAdapter(
     private val schedules: MutableList<ScheduleEntity>,
     private val packageColor: Int,
     private val onDelete: (ScheduleEntity) -> Unit,
-    private val onEdit: (ScheduleEntity) -> Unit
 ) : RecyclerView.Adapter<PackageScheduleListAdapter.PackageScheduleViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PackageScheduleViewHolder {
-        val binding = ItemScheduleBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ItemPackageScheduleBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return PackageScheduleViewHolder(binding)
     }
 
@@ -26,12 +24,11 @@ class PackageScheduleListAdapter(
         holder.binding.scheduleInfo.text = "${schedule.time} ${schedule.recurrence} ${schedule.days}"
         (holder.binding.root as CardView).setCardBackgroundColor(packageColor)
 
-        holder.binding.editButton.setOnClickListener { onEdit(schedule) }
         holder.binding.deleteButton.setOnClickListener { onDelete(schedule) }
     }
 
     override fun getItemCount(): Int = schedules.size
 
-    inner class PackageScheduleViewHolder(val binding: ItemScheduleBinding) :
+    inner class PackageScheduleViewHolder(val binding: ItemPackageScheduleBinding) :
         RecyclerView.ViewHolder(binding.root)
 }

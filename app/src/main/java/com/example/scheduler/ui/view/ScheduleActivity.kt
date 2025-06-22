@@ -5,7 +5,6 @@ import android.app.PendingIntent
 import android.app.TimePickerDialog
 import android.content.Intent
 import android.content.pm.ApplicationInfo
-import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -14,7 +13,6 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import com.example.scheduler.databinding.ActivityScheduleBinding
 import java.util.Calendar
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,6 +20,7 @@ import com.example.scheduler.data.local.ScheduleEntity
 import com.example.scheduler.receiver.AlarmReceiver
 import com.example.scheduler.ui.adapter.PackageScheduleListAdapter
 import com.example.scheduler.ui.viewModel.ScheduleViewModel
+import androidx.core.graphics.toColorInt
 
 
 class ScheduleActivity : AppCompatActivity() {
@@ -40,7 +39,7 @@ class ScheduleActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        Log.d("Schedule App","ScheduleActivity - > onCreate")
+        Log.d("Schedule App", "ScheduleActivity - > onCreate")
 
         binding = ActivityScheduleBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -70,26 +69,33 @@ class ScheduleActivity : AppCompatActivity() {
         }
 
         val recurrenceOptions = listOf("One-time", "Daily", "Weekly")
-        val recurrenceAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, recurrenceOptions)
+        val recurrenceAdapter =
+            ArrayAdapter(this, android.R.layout.simple_spinner_item, recurrenceOptions)
         binding.recurrenceSpinner.adapter = recurrenceAdapter
         originalRecurrence?.let {
             val index = recurrenceOptions.indexOf(it)
             if (index >= 0) binding.recurrenceSpinner.setSelection(index)
         }
 
-        binding.recurrenceSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                binding.weeklyDaysGroup.visibility = if (position == 2) View.VISIBLE else View.GONE
+        binding.recurrenceSpinner.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?, view: View?, position: Int, id: Long
+                ) {
+                    binding.weeklyDaysGroup.visibility =
+                        if (position == 2) View.VISIBLE else View.GONE
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {}
             }
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
-        }
 
         binding.pickTimeButton.setOnClickListener {
             val calendar = Calendar.getInstance()
             TimePickerDialog(this, { _, hourOfDay, minute ->
                 val amPm = if (hourOfDay >= 12) "PM" else "AM"
                 val formattedHour = if (hourOfDay % 12 == 0) 12 else hourOfDay % 12
-                binding.timeSelected.text = String.format("%02d:%02d %s", formattedHour, minute, amPm)
+                binding.timeSelected.text =
+                    String.format("%02d:%02d %s", formattedHour, minute, amPm)
             }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false).show()
         }
 
@@ -114,10 +120,8 @@ class ScheduleActivity : AppCompatActivity() {
 
             val daysString = if (recurrence == "Weekly") selectedDays.joinToString(",") else ""
 
-            val isSame = isEditMode &&
-                    selectedTime == originalTime &&
-                    recurrence == originalRecurrence &&
-                    daysString == originalDays
+            val isSame =
+                isEditMode && selectedTime == originalTime && recurrence == originalRecurrence && daysString == originalDays
 
             if (isSame) {
                 Toast.makeText(this, "No changes detected", Toast.LENGTH_SHORT).show()
@@ -125,50 +129,49 @@ class ScheduleActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            viewModel.checkTimeConflict(packageName, selectedTime, recurrence, daysString, { conflictExists ->
-                if (conflictExists) {
-                    Toast.makeText(this, "Schedule conflict detected", Toast.LENGTH_SHORT).show()
-                } else {
-                    if (isEditMode) originalScheduleId?.let { viewModel.deleteById(it, packageName) }
+            viewModel.checkTimeConflict(
+                packageName, selectedTime, recurrence, daysString, { conflictExists ->
+                    if (conflictExists) {
+                        Toast.makeText(this, "Schedule conflict detected", Toast.LENGTH_SHORT)
+                            .show()
+                    } else {
+                        if (isEditMode) originalScheduleId?.let {
+                            viewModel.deleteById(
+                                it, packageName
+                            )
+                        }
 
-                    viewModel.insertSchedule(
-                        ScheduleEntity(
-                            packageName = packageName,
-                            appLabel = appLabel.toString(),
-                            time = selectedTime,
-                            recurrence = recurrence,
-                            days = daysString
+                        viewModel.insertSchedule(
+                            ScheduleEntity(
+                                packageName = packageName,
+                                appLabel = appLabel.toString(),
+                                time = selectedTime,
+                                recurrence = recurrence,
+                                days = daysString
+                            )
                         )
-                    )
 
-                    viewModel.ensureColorExists(packageName)
-                    setupAlarm(packageName, selectedTime)
-                    Toast.makeText(this, "Schedule saved", Toast.LENGTH_SHORT).show()
-                    finish()
-                }
-            }, originalScheduleId)
+                        viewModel.ensureColorExists(packageName)
+                        setupAlarm(packageName, selectedTime)
+                        Toast.makeText(this, "Schedule saved", Toast.LENGTH_SHORT).show()
+                        finish()
+                    }
+                }, originalScheduleId
+            )
         }
 
-        viewModel.schedules.observe(this, Observer { scheduleList ->
-            val colorHex = viewModel.colorHex.value
-            val colorInt = colorHex?.let { Color.parseColor(it) } ?: Color.GRAY
-            scheduleAdapter = PackageScheduleListAdapter(scheduleList.toMutableList(), colorInt,
-                onDelete = { viewModel.deleteSchedule(it) },
-                onEdit = {
-                    val intent = Intent(this, ScheduleActivity::class.java).apply {
-                        putExtra("id", it.id)
-                        putExtra("packageName", it.packageName)
-                        putExtra("appLabel", it.appLabel)
-                        putExtra("time", it.time)
-                        putExtra("recurrence", it.recurrence)
-                        putExtra("days", it.days)
-                    }
-                    startActivity(intent)
-                })
+        viewModel.scheduleAndColor.observe(this) { scheduleWithColor ->
+            scheduleAdapter = PackageScheduleListAdapter(
+                scheduleWithColor.schedules.toMutableList(),
+                scheduleWithColor.colorHex.toColorInt(),
+                onDelete = { viewModel.deleteSchedule(it) }
+            )
+
             binding.schedulesRecyclerView.layoutManager = LinearLayoutManager(this)
             binding.schedulesRecyclerView.adapter = scheduleAdapter
-            binding.schedulesCardView.visibility = if (scheduleList.isEmpty()) View.GONE else View.VISIBLE
-        })
+            binding.schedulesCardView.visibility =
+                if (scheduleWithColor.schedules.isEmpty()) View.GONE else View.VISIBLE
+        }
 
         viewModel.loadSchedules(packageName)
     }
@@ -176,7 +179,7 @@ class ScheduleActivity : AppCompatActivity() {
     private fun setupAlarm(packageName: String, time: String) {
         // Expecting time in format "hh:mm AM/PM"
         val timeParts = time.split(" ", ":")
-        if (timeParts.size != 3) return  // Invalid format
+        if (timeParts.size != 3) return
 
         val hour12 = timeParts[0].toIntOrNull() ?: return
         val minute = timeParts[1].toIntOrNull() ?: return
@@ -210,9 +213,7 @@ class ScheduleActivity : AppCompatActivity() {
         )
 
         (getSystemService(ALARM_SERVICE) as AlarmManager).setExactAndAllowWhileIdle(
-            AlarmManager.RTC_WAKEUP,
-            calendar.timeInMillis,
-            pendingIntent
+            AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent
         )
     }
 }

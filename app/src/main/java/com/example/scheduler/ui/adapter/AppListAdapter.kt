@@ -4,7 +4,7 @@ import android.view.ViewGroup
 import android.view.LayoutInflater
 import androidx.recyclerview.widget.RecyclerView
 import com.example.scheduler.data.model.AppInfo
-import com.example.scheduler.databinding.AppItemBinding
+import com.example.scheduler.databinding.ItemAppBinding
 
 class AppListAdapter(
     private val apps: List<AppInfo>,
@@ -12,7 +12,7 @@ class AppListAdapter(
 ) : RecyclerView.Adapter<AppListAdapter.AppViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AppViewHolder {
-        val binding = AppItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ItemAppBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return AppViewHolder(binding)
     }
 
@@ -29,6 +29,6 @@ class AppListAdapter(
 
     override fun getItemCount() = apps.size
 
-    inner class AppViewHolder(val binding: AppItemBinding) :
+    inner class AppViewHolder(val binding: ItemAppBinding) :
         RecyclerView.ViewHolder(binding.root)
 }

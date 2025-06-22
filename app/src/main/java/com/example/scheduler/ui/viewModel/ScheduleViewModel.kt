@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.scheduler.data.local.AppDatabase
 import com.example.scheduler.data.local.PackageColor
 import com.example.scheduler.data.local.ScheduleEntity
+import com.example.scheduler.data.model.ScheduleWithColor
 import com.example.scheduler.data.repository.ScheduleRepository
 import kotlinx.coroutines.launch
 
@@ -17,20 +18,15 @@ class ScheduleViewModel(application: Application) : AndroidViewModel(application
     private val db = AppDatabase.getInstance(application)
     private val repository = ScheduleRepository(db)
 
-    private val _schedules = MutableLiveData<List<ScheduleEntity>>()
-    val schedules: LiveData<List<ScheduleEntity>> = _schedules
-
-    private val _colorHex = MutableLiveData<String>()
-    val colorHex: LiveData<String> = _colorHex
+    private val _scheduleAndColor = MutableLiveData<ScheduleWithColor>()
+    val scheduleAndColor: LiveData<ScheduleWithColor> = _scheduleAndColor
 
     fun loadSchedules(packageName: String) {
         viewModelScope.launch {
-            /*_schedules.value = repository.getSchedules(packageName)*/
             val data = repository.getSchedules(packageName)
-            _schedules.postValue(data)
+            val color = repository.getColorHex(packageName) ?: "#888888"
 
-            val color = repository.getColorHex(packageName)
-            _colorHex.postValue(color ?: "#888888")
+            _scheduleAndColor.postValue(ScheduleWithColor(data, color))
         }
     }
 
