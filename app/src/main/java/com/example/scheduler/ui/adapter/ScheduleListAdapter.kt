@@ -2,6 +2,7 @@ package com.example.scheduler.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.cardview.widget.CardView
 import androidx.core.graphics.drawable.toDrawable
 import androidx.recyclerview.widget.RecyclerView
 import com.example.scheduler.data.local.ScheduleEntity
@@ -28,7 +29,7 @@ class ScheduleListAdapter(
         holder.binding.scheduleInfo.text = "${schedule.time} ${schedule.recurrence} ${schedule.days}"
 
         val color = packageColors[schedule.packageName] ?: 0xFFDDDDDD.toInt()
-        holder.binding.root.background = color.toDrawable()
+        (holder.binding.root as CardView).setCardBackgroundColor(color)
 
         holder.binding.editButton.setOnClickListener { onEdit(schedule) }
         holder.binding.deleteButton.setOnClickListener { onDelete(schedule) }

@@ -103,9 +103,10 @@ class ScheduleListFragment : Fragment() {
     }
 
     private fun generateColorHex(): String {
-        val r = Random.nextInt(100, 200)
-        val g = Random.nextInt(100, 200)
-        val b = Random.nextInt(100, 200)
+        val base = 200
+        val r = (base + Random.nextInt(0, 56)).coerceAtMost(255)
+        val g = (base + Random.nextInt(0, 56)).coerceAtMost(255)
+        val b = (base + Random.nextInt(0, 56)).coerceAtMost(255)
         return String.format("#%02X%02X%02X", r, g, b)
     }
 

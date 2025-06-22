@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="12dp">
+        android:layout_margin="12dp">
 
         <TextView
             android:id="@+id/app_name"
@@ -55,4 +55,3 @@
         </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>
-
