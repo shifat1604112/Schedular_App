@@ -43,4 +43,7 @@ interface AppLaunchDao {
 
     @Query("SELECT * FROM app_launch ORDER BY timestamp DESC")
     suspend fun getAll(): List<AppLaunchEntity>
+
+    @Query("DELETE FROM app_launch")
+    suspend fun deleteAll()
 }

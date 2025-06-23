@@ -21,4 +21,6 @@
     <string name="launch_time">Launch Time</string>
     <string name="app_icon">App Icon</string>
     <string name="schedule_on">Schedule on :</string>
+    <string name="delete_all">Delete All</string>
+    <string name="scheduled_apps_header">Scheduled Apps</string>
 </resources>
