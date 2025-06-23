@@ -11,7 +11,12 @@ interface ScheduleDao {
     suspend fun getAll(): List<ScheduleEntity>
 
     @Query("SELECT * FROM schedules WHERE packageName = :pkg AND time = :time AND recurrence = :rec AND days = :days")
-    suspend fun checkTimeConflict(pkg: String, time: String, rec: String, days: String): List<ScheduleEntity>
+    suspend fun checkTimeConflict(
+        pkg: String,
+        time: String,
+        rec: String,
+        days: String
+    ): List<ScheduleEntity>
 
     @Query("SELECT * FROM schedules WHERE packageName = :pkg")
     suspend fun getSchedulesForApp(pkg: String): List<ScheduleEntity>
@@ -25,6 +30,8 @@ interface ScheduleDao {
     @Query("DELETE FROM schedules WHERE id = :id")
     suspend fun deleteById(id: Int)
 
+    @Query("DELETE FROM schedules WHERE packageName = :pkg AND time = :time AND recurrence = :rec AND days = :days")
+    suspend fun deleteSpecific(pkg: String, time: String, rec: String, days: String)
 }
 
 @Dao

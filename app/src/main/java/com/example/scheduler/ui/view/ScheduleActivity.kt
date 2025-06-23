@@ -22,7 +22,6 @@ import com.example.scheduler.ui.adapter.PackageScheduleListAdapter
 import com.example.scheduler.ui.viewModel.ScheduleViewModel
 import androidx.core.graphics.toColorInt
 
-
 class ScheduleActivity : AppCompatActivity() {
     private lateinit var binding: ActivityScheduleBinding
     private val viewModel: ScheduleViewModel by viewModels()
@@ -152,7 +151,7 @@ class ScheduleActivity : AppCompatActivity() {
                         )
 
                         viewModel.ensureColorExists(packageName)
-                        setupAlarm(packageName, selectedTime)
+                        setupAlarm(packageName, selectedTime, recurrence, daysString)
                         Toast.makeText(this, "Schedule saved", Toast.LENGTH_SHORT).show()
                         finish()
                     }
@@ -176,7 +175,7 @@ class ScheduleActivity : AppCompatActivity() {
         viewModel.loadSchedules(packageName)
     }
 
-    private fun setupAlarm(packageName: String, time: String) {
+    private fun setupAlarm(packageName: String, time: String, recurrence: String, days: String) {
         // Expecting time in format "hh:mm AM/PM"
         val timeParts = time.split(" ", ":")
         if (timeParts.size != 3) return
@@ -203,6 +202,9 @@ class ScheduleActivity : AppCompatActivity() {
 
         val intent = Intent(this, AlarmReceiver::class.java).apply {
             putExtra("packageName", packageName)
+            putExtra("time", time)
+            putExtra("recurrence", recurrence)
+            putExtra("days", days)
         }
 
         val pendingIntent = PendingIntent.getBroadcast(

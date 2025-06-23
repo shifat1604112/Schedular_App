@@ -16,14 +16,21 @@ class HiddenLauncherActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         val targetPackage = intent.getStringExtra("targetApp")
+        val time = intent.getStringExtra("time") ?: ""
+        val recurrence = intent.getStringExtra("recurrence") ?: ""
+        val days = intent.getStringExtra("days") ?: ""
 
         targetPackage?.let {
             lifecycleScope.launch {
                 withContext(Dispatchers.IO) {
-                    val entity = AppLaunchEntity(packageName = it, timestamp = System.currentTimeMillis())
-                    AppDatabase.getInstance(applicationContext)
-                        .appLaunchDao()
-                        .insert(entity)
+                    val entity =
+                        AppLaunchEntity(packageName = it, timestamp = System.currentTimeMillis())
+                    AppDatabase.getInstance(applicationContext).appLaunchDao().insert(entity)
+
+                    if (recurrence == "One-time") {
+                        AppDatabase.getInstance(applicationContext).scheduleDao()
+                            .deleteSpecific(it, time, "One-time", days)
+                    }
                 }
 
                 try {
@@ -32,7 +39,9 @@ class HiddenLauncherActivity : AppCompatActivity() {
                         launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                         startActivity(launchIntent)
                     } else {
-                        Toast.makeText(this@HiddenLauncherActivity, "App not found: $it", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this@HiddenLauncherActivity, "App not found: $it", Toast.LENGTH_SHORT
+                        ).show()
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()

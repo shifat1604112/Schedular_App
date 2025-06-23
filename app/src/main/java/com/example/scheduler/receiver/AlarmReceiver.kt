@@ -1,6 +1,5 @@
 package com.example.scheduler.receiver
 
-import android.R.attr.targetPackage
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -26,6 +25,9 @@ import kotlinx.coroutines.launch
 class AlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         val packageName = intent.getStringExtra("packageName") ?: return
+        val time = intent.getStringExtra("time") ?: return
+        val recurrence = intent.getStringExtra("recurrence") ?: return
+        val days = intent.getStringExtra("days") ?: ""
 
         val pm = context.packageManager
         val launchIntent = pm.getLaunchIntentForPackage(packageName)?.apply {
@@ -37,13 +39,16 @@ class AlarmReceiver : BroadcastReceiver() {
             return
         }
 
-        launchScheduledApplication(context, packageName, launchIntent)
+        launchScheduledApplication(context, packageName, launchIntent, time, recurrence, days)
     }
 
     private fun launchScheduledApplication(
         context: Context,
         packageName: String,
-        launchIntent: Intent
+        launchIntent: Intent,
+        time: String,
+        recurrence: String,
+        days: String
     ) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
             context.startActivity(launchIntent)
@@ -52,19 +57,23 @@ class AlarmReceiver : BroadcastReceiver() {
             CoroutineScope(Dispatchers.IO).launch {
                 AppDatabase.getInstance(context).appLaunchDao().insert(
                     AppLaunchEntity(
-                        packageName = packageName,
-                        timestamp = System.currentTimeMillis()
+                        packageName = packageName, timestamp = System.currentTimeMillis()
                     )
                 )
+
+                if (recurrence == "One-time") {
+                    AppDatabase.getInstance(context).scheduleDao()
+                        .deleteSpecific(packageName, time, "One-time", days)
+                }
             }
         } else {
             // Show notification for Android 10+
-            showLaunchNotification(context, packageName)
+            showLaunchNotification(context, packageName, time, recurrence, days)
         }
     }
 
     private fun showLaunchNotification(
-        context: Context, packageName: String
+        context: Context, packageName: String, time: String, recurrence: String, days: String
     ) {
         val channelId = "scheduled_app_launch"
         val notificationManager =
@@ -102,13 +111,13 @@ class AlarmReceiver : BroadcastReceiver() {
             }
         }
 
-        val bridgeIntent = Intent(context, HiddenLauncherActivity::class.java
-        )
-        bridgeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-        bridgeIntent.putExtra("targetApp", packageName)
-
-
-
+        val bridgeIntent = Intent(context, HiddenLauncherActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            putExtra("targetApp", packageName)
+            putExtra("time", time)
+            putExtra("recurrence", recurrence)
+            putExtra("days", days)
+        }
 
         val pendingIntent = PendingIntent.getActivity(
             context,
@@ -118,12 +127,9 @@ class AlarmReceiver : BroadcastReceiver() {
         )
 
         val notification = NotificationCompat.Builder(context, channelId)
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
-            .setLargeIcon(largeIconBitmap)
-            .setContentTitle("$appName Launch")
-            .setContentText("Tap to open $appName")
-            .setContentIntent(pendingIntent)
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setSmallIcon(R.drawable.ic_launcher_foreground).setLargeIcon(largeIconBitmap)
+            .setContentTitle("$appName Launch").setContentText("Tap to open $appName")
+            .setContentIntent(pendingIntent).setPriority(NotificationCompat.PRIORITY_HIGH)
             .setAutoCancel(true).build()
 
         notificationManager.notify(System.currentTimeMillis().toInt(), notification)
